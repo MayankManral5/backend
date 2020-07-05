@@ -16,19 +16,20 @@ public class PhotoResource {
     private PhotoService photoService;
 
     @PostMapping("/photos/add")
-    public String addPhoto(@RequestParam("title") String title,
+    public String addPhoto(@RequestParam("id") int id,
+                           @RequestParam("title") String title,
                            @RequestParam("image") MultipartFile image, Model model)
             throws IOException {
-        String id = photoService.addPhoto(title, image);
-        return "redirect:/photos/" + id;
+        int value = photoService.addPhoto(id, title, image);
+        return "done";
     }
 
     @GetMapping("/photos/{id}")
-    public String getPhoto(@PathVariable String id, Model model) {
+    public int getPhoto(@PathVariable int id, Model model) {
         Photo photo = photoService.getPhoto(id);
         model.addAttribute("title", photo.getTitle());
         model.addAttribute("image",
                 Base64.getEncoder().encodeToString(photo.getImage().getData()));
-        return "photos";
+        return 1;
     }
 }

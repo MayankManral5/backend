@@ -5,6 +5,8 @@ import com.jack.rest.api.demoApi.documents.Users;
 import com.jack.rest.api.demoApi.exception.UserAlreadyExist;
 import com.jack.rest.api.demoApi.exception.UserNotFoundException;
 import com.jack.rest.api.demoApi.repositories.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,8 @@ import java.util.Optional;
 @RestController
 public class  UsersResource {
 
-
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     private UsersRepository usersRepository;
     public UsersResource(UsersRepository usersRepository) {
@@ -37,34 +40,27 @@ public class  UsersResource {
         return user;
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody Login login){
-        List<Users> userPresent = usersRepository.findAll();
-        for (Users users: userPresent){
-            if( (login.getUserEmail().equalsIgnoreCase(users.getEmail())
-                    && login.getPassword().equals(users.getPassword())) )
-                return "Login SuccessFull !  ";
-
-        }
-        throw new UserNotFoundException("Invalid UserEmail or Password");
-    }
+//    @PostMapping("/login")
+//    public String login(@RequestBody Login login){
+//        List<Users> userPresent = usersRepository.findAll();
+//        for (Users users: userPresent){
+//            if( (login.getUserEmail().equalsIgnoreCase(users.getEmail())
+//                    && login.getPassword().equals(users.getPassword())) )
+//                return "Login SuccessFull !  ";
+//
+//        }
+//        throw new UserNotFoundException("Invalid UserEmail or Password");
+//    }
 
     @GetMapping("/users/search/{name}")
     public List<Users> getUserByName(@PathVariable String name){
         List<Users> user = new ArrayList<Users>();
-        System.out.println("#######################"+name);;
         List<Users> userPresent = usersRepository.findAll();
-        for(Users users :userPresent){
-            System.out.println("########## "+users.getName());
-        }
+
         for (Users users :userPresent){
             System.out.println(users.getName());
             if(users.getName().equalsIgnoreCase(name)){
-                try{
                     user.add(users);
-                }catch (NullPointerException ex){
-                    System.out.println(ex);
-                }
             }
         }
         if(user.size()==0)
@@ -79,6 +75,7 @@ public class  UsersResource {
             if (users.getEmail().equalsIgnoreCase(user.getEmail()))
                 throw new UserAlreadyExist("User Already Exist with same email Id");
         }
+        //users.setPassword(encoder.encode(users.getPassword()));
         usersRepository.save(users);
     }
 
@@ -92,7 +89,10 @@ public class  UsersResource {
 
     @PutMapping("/users/{id}")
     public void updateUser(@RequestBody Users users, @PathVariable Integer id){
-        users.setId(id);
+        Optional<Users> user = usersRepository.findById(id);
+        if(!user.isPresent())
+            throw new UserNotFoundException("User id not present with \""+id+"\" id");
+
         usersRepository.save(users);
     }
 

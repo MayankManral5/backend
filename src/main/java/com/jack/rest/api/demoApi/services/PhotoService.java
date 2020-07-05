@@ -15,14 +15,17 @@ public class PhotoService {
     @Autowired
     private PhotoRepository photoRepo;
 
-    public String addPhoto(String title, MultipartFile file) throws IOException {
-        Photo photo = new Photo(title);
-        photo.setImage(
-                new Binary(BsonBinarySubType.BINARY, file.getBytes()));
-        photo = photoRepo.insert(photo); return photo.getId();
+    public int addPhoto(int id, String title, MultipartFile file) throws IOException {
+        Binary img = new Binary(BsonBinarySubType.BINARY, file.getBytes());
+        Photo photo = new Photo(id, title, img);
+
+//        int value = photo.getId();
+//        System.out.println("###############"+value);
+         photoRepo.insert(photo);
+        return photo.getId();
     }
 
-    public Photo getPhoto(String id) {
+    public Photo getPhoto(int id) {
         return photoRepo.findById(id).get();
     }
 }

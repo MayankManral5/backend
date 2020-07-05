@@ -7,19 +7,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "photos")
 public class Photo {
     @Id
-    private String id;
+    private int id;
     private String title;
     private Binary image;
 
-    public Photo(String title) {
-        this.title = title;
+    public Photo(int id, String title, Binary image ) {
+        this.id=id;
+        this.title=title;
+        this.image=image;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

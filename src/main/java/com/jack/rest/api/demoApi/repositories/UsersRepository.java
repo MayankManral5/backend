@@ -5,11 +5,8 @@ import com.jack.rest.api.demoApi.documents.Users;
 import org.apache.catalina.LifecycleState;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UsersRepository extends MongoRepository<Users, Integer> {
-
-    Optional<Users> findByName(String name);
 
 }
