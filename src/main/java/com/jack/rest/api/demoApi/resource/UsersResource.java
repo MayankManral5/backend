@@ -5,9 +5,9 @@ import com.jack.rest.api.demoApi.documents.Users;
 import com.jack.rest.api.demoApi.exception.UserAlreadyExist;
 import com.jack.rest.api.demoApi.exception.UserNotFoundException;
 import com.jack.rest.api.demoApi.repositories.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.annotation.Validated;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,8 +18,8 @@ import java.util.Optional;
 @RestController
 public class  UsersResource {
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+//    @Autowired
+//    private BCryptPasswordEncoder encoder;
 
     private UsersRepository usersRepository;
     public UsersResource(UsersRepository usersRepository) {
@@ -39,18 +39,6 @@ public class  UsersResource {
             throw new UserNotFoundException("User Not Found of id "+id);
         return user;
     }
-
-//    @PostMapping("/login")
-//    public String login(@RequestBody Login login){
-//        List<Users> userPresent = usersRepository.findAll();
-//        for (Users users: userPresent){
-//            if( (login.getUserEmail().equalsIgnoreCase(users.getEmail())
-//                    && login.getPassword().equals(users.getPassword())) )
-//                return "Login SuccessFull !  ";
-//
-//        }
-//        throw new UserNotFoundException("Invalid UserEmail or Password");
-//    }
 
     @GetMapping("/users/search/{name}")
     public List<Users> getUserByName(@PathVariable String name){
